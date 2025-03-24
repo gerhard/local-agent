@@ -17,9 +17,12 @@ func (l *LocalAgent) Summarize(
 	// Include comments or only summarize posts
 	// +optional
 	comments bool,
+	// Model to use for the summarization
+	// +default="ignaciolopezluna020/llama3.2:1B"
+	model string,
 ) (string, error) {
 	return dag.
-		LLM(dagger.LLMOpts{Model: "ignaciolopezluna020/llama3.2:1B"}).
+		LLM(dagger.LLMOpts{Model: model}).
 		SetReddit("reddit_fetcher", dag.Reddit(clientId, clientSecret, username, password)).
 		WithPrompt("Create a summary of the subreddit '" + subreddit + "'").
 		WithPrompt("You have access to a reddit fetcher to get recent posts of the subreddit").
@@ -45,8 +48,11 @@ func (l *LocalAgent) PrintSummary(
 	// Include comments or only summarize posts
 	// +optional
 	comments bool,
+	// Model to use for the summarization
+	// +default="ignaciolopezluna020/llama3.2:1B"
+	model string,
 ) (string, error) {
-	summary, err := l.Summarize(ctx, clientId, clientSecret, username, password, subreddit, comments)
+	summary, err := l.Summarize(ctx, clientId, clientSecret, username, password, subreddit, comments, model)
 	if err != nil {
 		return "", err
 	}
@@ -55,10 +61,14 @@ func (l *LocalAgent) PrintSummary(
 
 // Creates a development environment for the project, installs all the needed tools and libraries
 func (l *LocalAgent) DevEnvironment(
+	// Codebase to work on
 	source *dagger.Directory,
+	// Model to use for the summarization
+	// +default="eunomie/qwen2.5-coder-14b-instruct:q5_k_m"
+	model string,
 ) *dagger.Container {
 	return dag.
-		LLM(dagger.LLMOpts{Model: "eunomie/qwen2.5-coder-14b-instruct:q5_k_m"}).
+		LLM(dagger.LLMOpts{Model: model}).
 		WithPromptVar("assignment", "Create a development environment for the project, install all the needed tools and libraries").
 		WithPromptFile(dag.CurrentModule().Source().File("qwen_dev_env.md")).
 		WithDevWorkspace(dag.DevWorkspace(source)).

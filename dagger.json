@@ -1,0 +1,22 @@
+{
+  "name": "local-agent",
+  "engineVersion": "v0.17.1-010101000000-dev-8081343d2525",
+  "sdk": {
+    "source": "go"
+  },
+  "dependencies": [
+    {
+      "name": "reddit",
+      "source": "reddit"
+    },
+    {
+      "name": "glow",
+      "source": "glow"
+    },
+    {
+      "name": "dev-workspace",
+      "source": "dev-workspace"
+    }
+  ],
+  "source": ".dagger"
+}

@@ -2,10 +2,7 @@ package io.dagger.modules.devworkspace;
 
 import static io.dagger.client.Dagger.dag;
 
-import io.dagger.client.Container;
-import io.dagger.client.DaggerQueryException;
-import io.dagger.client.Directory;
-import io.dagger.client.ReturnType;
+import io.dagger.client.*;
 import io.dagger.module.annotation.Function;
 import io.dagger.module.annotation.Object;
 import java.util.List;
@@ -14,13 +11,16 @@ import java.util.concurrent.ExecutionException;
 @Object
 public class DevWorkspace {
   public Container container;
-  public Directory source;
 
   public DevWorkspace() {}
 
   public DevWorkspace(Directory source) {
     this.container =
-        dag().container().from("alpine:3").withDirectory("/app", source).withWorkdir("/app");
+        dag()
+            .container()
+            .from("alpine:3")
+            .withDirectory("/workspace", source)
+            .withWorkdir("/workspace");
   }
 
   /**
@@ -84,7 +84,7 @@ public class DevWorkspace {
    * @param path Path to remove the file at
    */
   @Function
-  public DevWorkspace Remove(String path) {
+  public DevWorkspace remove(String path) {
     this.container = this.container.withoutFile(path);
     return this;
   }

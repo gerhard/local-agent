@@ -1,77 +1,37 @@
 package main
 
 import (
-	"context"
-
 	"dagger/local-agent/internal/dagger"
+
+	"github.com/google/uuid"
 )
 
 type LocalAgent struct{}
-
-// Summarize a subreddit
-func (l *LocalAgent) Summarize(
-	ctx context.Context,
-	clientId, clientSecret, username, password *dagger.Secret,
-	// Name of the subreddit to summarize
-	subreddit string,
-	// Include comments or only summarize posts
-	// +optional
-	comments bool,
-	// Model to use for the summarization
-	// +default="ignaciolopezluna020/llama3.2:1B"
-	model string,
-) (string, error) {
-	return dag.
-		LLM(dagger.LLMOpts{Model: model}).
-		SetReddit("reddit_fetcher", dag.Reddit(clientId, clientSecret, username, password)).
-		WithPrompt("Create a summary of the subreddit '" + subreddit + "'").
-		WithPrompt("You have access to a reddit fetcher to get recent posts of the subreddit").
-		With(func(r *dagger.LLM) *dagger.LLM {
-			if comments {
-				return r.WithPrompt("Use the reddit fetcher to get recent comments of the subreddit")
-			}
-			return r
-		}).
-		WithPrompt("Write a few sentences about the subreddit '" + subreddit + "' and highlight the most interesting posts.").
-		WithPrompt("Include some exceprt from the posts").
-		WithPrompt("Include some statistics about the subreddit").
-		WithPrompt("Format the response in markdown").
-		LastReply(ctx)
-}
-
-// Print a summary of the subreddit
-func (l *LocalAgent) PrintSummary(
-	ctx context.Context,
-	clientId, clientSecret, username, password *dagger.Secret,
-	// Name of the subreddit to summarize
-	subreddit string,
-	// Include comments or only summarize posts
-	// +optional
-	comments bool,
-	// Model to use for the summarization
-	// +default="ignaciolopezluna020/llama3.2:1B"
-	model string,
-) (string, error) {
-	summary, err := l.Summarize(ctx, clientId, clientSecret, username, password, subreddit, comments, model)
-	if err != nil {
-		return "", err
-	}
-	return dag.Glow().DisplayMarkdown(ctx, summary)
-}
 
 // Creates a development environment for the project, installs all the needed tools and libraries
 func (l *LocalAgent) DevEnvironment(
 	// Codebase to work on
 	source *dagger.Directory,
-	// Model to use for the summarization
-	// +default="eunomie/qwen2.5-coder-14b-instruct:q5_k_m"
-	model string,
 ) *dagger.Container {
 	return dag.
-		LLM(dagger.LLMOpts{Model: model}).
+		LLM().
 		WithPromptVar("assignment", "Create a development environment for the project, install all the needed tools and libraries").
 		WithPromptFile(dag.CurrentModule().Source().File("qwen_dev_env.md")).
 		WithDevWorkspace(dag.DevWorkspace(source)).
 		DevWorkspace().
 		Container()
+}
+
+// Enter a development environment and export the workspace directory
+func (l *LocalAgent) WorkOn(
+	// Codebase to work on
+	source *dagger.Directory,
+) *dagger.Directory {
+	return l.DevEnvironment(source).
+		WithMountedCache("/terminal", dag.CacheVolume(uuid.New().String())).
+		WithExec([]string{"cp", "-r", "/workspace", "/terminal"}).
+		WithWorkdir("/terminal/workspace").
+		Terminal().
+		WithExec([]string{"cp", "-r", "/terminal/workspace", "/out"}).
+		Directory("/out")
 }

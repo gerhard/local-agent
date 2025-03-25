@@ -60,7 +60,7 @@ In this workspace, you have access to the following tools:
 
 **Key Points**:
 
-- **ACT**: Always **ru nthe tools directly** - do not just describe them.
+- **ACT**: Always **run the tools directly** - do not just describe them.
 - System dependencies → use `add-packages()`
 - Language/package manager dependencies → use `with-exec()`
 - After every command, check success, retry if failed.

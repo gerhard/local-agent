@@ -1,7 +1,0 @@
-{
-  "name": "reddit",
-  "engineVersion": "v0.17.0",
-  "sdk": {
-    "source": "java"
-  }
-}

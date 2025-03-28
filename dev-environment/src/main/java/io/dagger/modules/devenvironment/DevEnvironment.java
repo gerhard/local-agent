@@ -1,4 +1,4 @@
-package io.dagger.modules.devworkspace;
+package io.dagger.modules.devenvironment;
 
 import static io.dagger.client.Dagger.dag;
 
@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Object
-public class DevWorkspace {
+public class DevEnvironment {
   public Container container;
 
-  public DevWorkspace() {}
+  public DevEnvironment() {}
 
-  public DevWorkspace(Directory source) {
+  public DevEnvironment(Directory source) {
     this.container =
         dag()
             .container()
@@ -24,12 +24,12 @@ public class DevWorkspace {
   }
 
   /**
-   * Install packages in the workspace and return exit code of the installation
+   * Install packages in the environment
    *
    * @param packages List of packages to install
    */
   @Function
-  public DevWorkspace addPackages(List<String> packages)
+  public DevEnvironment addPackages(List<String> packages)
       throws ExecutionException, DaggerQueryException, InterruptedException {
     List<String> args = new java.util.ArrayList<>();
     args.addAll(List.of("apk", "add", "--no-cache", "--update"));
@@ -43,7 +43,7 @@ public class DevWorkspace {
    * @param args Command to run
    */
   @Function
-  public DevWorkspace withExec(List<String> args)
+  public DevEnvironment withExec(List<String> args)
       throws ExecutionException, DaggerQueryException, InterruptedException {
     this.container =
         this.container.withExec(args, new Container.WithExecArguments().withExpect(ReturnType.ANY));
@@ -56,7 +56,7 @@ public class DevWorkspace {
   }
 
   /**
-   * Read the contents of a file in the workspace at the given path
+   * Read the contents of a file at the given path
    *
    * @param path Path to read the file at
    */
@@ -67,29 +67,29 @@ public class DevWorkspace {
   }
 
   /**
-   * Writhe contents of a file in the workspace at the given path
+   * Write the contents of a file at the given path
    *
    * @param path Path to write the file at
    * @param contents Contents to write
    */
   @Function
-  public DevWorkspace write(String path, String contents) {
+  public DevEnvironment write(String path, String contents) {
     this.container = this.container.withNewFile(path, contents);
     return this;
   }
 
   /**
-   * Remove a file in the workspace at the given path
+   * Remove a file at the given path
    *
    * @param path Path to remove the file at
    */
   @Function
-  public DevWorkspace remove(String path) {
+  public DevEnvironment remove(String path) {
     this.container = this.container.withoutFile(path);
     return this;
   }
 
-  /** List the files in the workspace in tree format */
+  /** List the files in the environment in tree format */
   @Function
   public String tree() throws ExecutionException, DaggerQueryException, InterruptedException {
     return this.container.withExec(List.of("tree", ".")).stdout();

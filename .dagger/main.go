@@ -15,10 +15,10 @@ func (l *LocalAgent) DevEnvironment(
 ) *dagger.Container {
 	return dag.
 		LLM().
+		WithDevEnvironment(dag.DevEnvironment(source)).
 		WithPromptVar("assignment", "Create a development environment for the project, install all the needed tools and libraries").
 		WithPromptFile(dag.CurrentModule().Source().File("qwen_dev_env.md")).
-		WithDevWorkspace(dag.DevWorkspace(source)).
-		DevWorkspace().
+		DevEnvironment().
 		Container()
 }
 

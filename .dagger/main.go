@@ -16,6 +16,7 @@ func (l *LocalAgent) DevEnvironment(
 	// Codebase to work on
 	source *dagger.Directory,
 ) (*dagger.Container, error) {
+	// Reads the system prompt file from the current module
 	systemPrompt, err := dag.CurrentModule().Source().File("qwen_system_prompt.md").Contents(ctx)
 	if err != nil {
 		return nil, err
@@ -23,17 +24,17 @@ func (l *LocalAgent) DevEnvironment(
 
 	// Create an environment around the source directory:
 	// - an alpine based container with the source directory mounted
-	// - a set of tools available to the LLM
-	env := dag.DevEnvironment(source)
+	// - a set of tools available to the LLM to read files, install packages, etc.
+	env := dag.AlpineWorkspace(source)
 
-	return dag.
-		LLM().
-		WithDevEnvironment(env).
+	return dag.LLM().
+		WithAlpineWorkspace(env).
+
 		WithSystemPrompt(systemPrompt).
 		WithPromptVar("assignment", "Create a development environment for the project, install all the needed tools and libraries").
 		WithPromptFile(dag.CurrentModule().Source().File("qwen_dev_env.md")).
-		DevEnvironment().
-		Container(), nil
+
+		AlpineWorkspace().Container(), nil
 }
 
 // Enter a development environment and export the workspace directory

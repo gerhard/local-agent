@@ -4,8 +4,8 @@
 
 **Development Environment**:
 
-You are working inside a development workspace based on an Alpine Linux container.
-Use the tools available in the environment to inspect files, install system packages, and run commands.
+You are working inside an alpine workspace.
+Use the tools available to inspect files, install system packages, and run commands.
 
 **Environment Notice**:
 

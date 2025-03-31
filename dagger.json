@@ -6,8 +6,8 @@
   },
   "dependencies": [
     {
-      "name": "dev-environment",
-      "source": "dev-environment"
+      "name": "alpine-workspace",
+      "source": "alpine-workspace"
     }
   ],
   "source": ".dagger"

@@ -1,4 +1,4 @@
-package io.dagger.modules.devenvironment;
+package io.dagger.modules.alpineworkspace;
 
 import static io.dagger.client.Dagger.dag;
 
@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Object
-public class DevEnvironment {
+public class AlpineWorkspace {
   public Container container;
 
-  public DevEnvironment() {}
+  public AlpineWorkspace() {}
 
-  public DevEnvironment(Directory source) {
+  public AlpineWorkspace(Directory source) {
     this.container =
         dag()
             .container()
@@ -24,26 +24,30 @@ public class DevEnvironment {
   }
 
   /**
-   * Install packages in the environment
+   * Install system packages using apk.
    *
-   * @param packages List of packages to install
+   * This is not suitable to install project dependencies.
+   *
+   * @param packages List of alpine packages to install
    */
   @Function
-  public DevEnvironment addPackages(List<String> packages)
+  public AlpineWorkspace addPackages(List<String> packages)
       throws ExecutionException, DaggerQueryException, InterruptedException {
     List<String> args = new java.util.ArrayList<>();
-    args.addAll(List.of("apk", "add", "--no-cache", "--update"));
+    args.addAll(List.of("apk", "add", "--no-cache"));
     args.addAll(packages);
     return withExec(args);
   }
 
   /**
-   * Run command and return the exit code
+   * Run shell command.
+   *
+   * This is useful to install project dependencies, run tests, etc.
    *
    * @param args Command to run
    */
   @Function
-  public DevEnvironment withExec(List<String> args)
+  public AlpineWorkspace withExec(List<String> args)
       throws ExecutionException, DaggerQueryException, InterruptedException {
     this.container =
         this.container.withExec(args, new Container.WithExecArguments().withExpect(ReturnType.ANY));
@@ -73,23 +77,12 @@ public class DevEnvironment {
    * @param contents Contents to write
    */
   @Function
-  public DevEnvironment write(String path, String contents) {
+  public AlpineWorkspace write(String path, String contents) {
     this.container = this.container.withNewFile(path, contents);
     return this;
   }
 
-  /**
-   * Remove a file at the given path
-   *
-   * @param path Path to remove the file at
-   */
-  @Function
-  public DevEnvironment remove(String path) {
-    this.container = this.container.withoutFile(path);
-    return this;
-  }
-
-  /** List the files in the environment in tree format */
+  /** List the available files in tree format */
   @Function
   public String tree() throws ExecutionException, DaggerQueryException, InterruptedException {
     return this.container.withExec(List.of("tree", ".")).stdout();

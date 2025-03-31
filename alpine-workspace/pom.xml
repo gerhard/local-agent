@@ -5,14 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.dagger.modules.daggermodule</groupId>
-    <artifactId>dev-environment</artifactId>
+    <artifactId>alpine-workspace</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>dev-environment</name>
+    <name>alpine-workspace</name>
 
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <dagger.module.deps>0.17.1-dev-environment-module</dagger.module.deps>
+        <dagger.module.deps>0.17.1-alpine-workspace-module</dagger.module.deps>
     </properties>
 
     <dependencies>

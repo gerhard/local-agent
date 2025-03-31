@@ -24,9 +24,11 @@ public class AlpineWorkspace {
   }
 
   /**
-   * Install system packages using apk.
+   * Install system packages using apk to the alpine workspace.
    *
-   * This is not suitable to install project dependencies.
+   * Use this to install system packages like `python3`, `git`, etc.
+   *
+   * You cannot install project dependencies with this tool.
    *
    * @param packages List of alpine packages to install
    */
@@ -40,9 +42,9 @@ public class AlpineWorkspace {
   }
 
   /**
-   * Run shell command.
+   * Run any command inside the alpine workspace
    *
-   * This is useful to install project dependencies, run tests, etc.
+   * Use this to install project dependencies, run tests, etc.
    *
    * @param args Command to run
    */
@@ -60,7 +62,7 @@ public class AlpineWorkspace {
   }
 
   /**
-   * Read the contents of a file at the given path
+   * Read a file at a given path and returns its content.
    *
    * @param path Path to read the file at
    */
@@ -71,7 +73,7 @@ public class AlpineWorkspace {
   }
 
   /**
-   * Write the contents of a file at the given path
+   * Write a file at a given path with the provided content.
    *
    * @param path Path to write the file at
    * @param contents Contents to write

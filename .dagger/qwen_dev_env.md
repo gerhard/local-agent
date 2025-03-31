@@ -2,16 +2,10 @@
 
 **Task**: $assignment
 
-**Development Workspace**:
+**Development Environment**:
 
 You are working inside a development workspace based on an Alpine Linux container.
-In this workspace, you have access to the following tools:
-- `tree`: List all files in the workspace
-- `read("file_path")`: Read any file
-- `write("file_path", "content")`: Write or modify files
-- `remove("file_path")`: Delete file
-- `add-packages(["package1", "package2"])`: Install packages to the dev workspace
-- `with-exec(["command", "arg1", "arg2", ...])`: Run any command inside the workspace
+Use the tools available in the environment to inspect files, install system packages, and run commands.
 
 **Environment Notice**:
 
@@ -52,6 +46,7 @@ In this workspace, you have access to the following tools:
 **Important Constraints**:
 
 - **Do NOT modify, write, or delete existing code files.**
+- **Do NOT use the `container` tool.**
 - You are allowed to:
     - Inspect files using `tree()` and `read()`.
     - Install system packages with `add-packages()`.

@@ -1,6 +1,6 @@
 {
   "name": "local-agent",
-  "engineVersion": "v0.17.2-010101000000-dev-704d939a0c01",
+  "engineVersion": "v0.17.3-010101000000-dev-6c2228ce67ad",
   "sdk": {
     "source": "go"
   },

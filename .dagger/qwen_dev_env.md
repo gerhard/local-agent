@@ -41,6 +41,7 @@ Use the tools available to inspect files, install system packages, and run comma
     - Re-evaluate missing packages or incorrect commands.
     - Adjust and **run the corrected command**.
 8. Repeat until all system packages and dependencies are installed successfully.
+9. Returns the modified development environment workspace.
 
 
 **Important Constraints**:
@@ -60,3 +61,4 @@ Use the tools available to inspect files, install system packages, and run comma
 - Language/package manager dependencies → use `with-exec()`
 - After every command, check success, retry if failed.
 - Strongly enforced no modification of code files
+- Always return the modified development environment workspace

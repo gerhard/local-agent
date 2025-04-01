@@ -14,15 +14,18 @@ func (l *LocalAgent) DevEnvironment(
 	source *dagger.Directory,
 ) *dagger.Container {
 	// Create an environment around the source directory:
-	// - an alpine based container with the source directory mounted
-	// - a set of tools available to the LLM to read files, install packages, etc.
-	env := dag.AlpineWorkspace(source)
+	env := dag.Env().
+		// an alpine based workspace in input, containing:
+		// - an alpine based container with the source directory mounted as the input
+		// - a set of tools available to the LLM to read files, install packages, etc.
+		WithAlpineWorkspaceInput("workspace", dag.AlpineWorkspace(source), "Alpine Environment with the source codebase mounted").
+		// a development environment in output, with all the tools installed
+		WithAlpineWorkspaceOutput("result", "Workspace with the development tools installed")
 
 	return dag.LLM().
-		WithAlpineWorkspace(env).
-		WithPromptVar("assignment", "Create a development environment for the project, install all the needed tools and libraries").
+		WithEnv(env).
 		WithPromptFile(dag.CurrentModule().Source().File("qwen_dev_env.md")).
-		AlpineWorkspace().Container()
+		Env().Output("result").AsAlpineWorkspace().Container()
 }
 
 // Enter a development environment and export the workspace directory

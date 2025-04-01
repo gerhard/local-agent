@@ -1,6 +1,6 @@
 {
   "name": "alpine-workspace",
-  "engineVersion": "v0.17.1-010101000000-dev-2b65b76ba847",
+  "engineVersion": "v0.18.0",
   "sdk": {
     "source": "java"
   }

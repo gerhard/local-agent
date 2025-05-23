@@ -32,13 +32,15 @@ Docker Model Runner is running
 Now, pull the model used in this demo:
 
 ```console
-docker model pull eunomie/qwen2.5-coder-14b-instruct:q5_k_m
+docker model pull eunomie/devstral-small-2505:q4_k_m
 ```
 
-And ensure this is working:
+> [!NOTE]
+
+Ensure this is working:
 
 ```console
-docker model run eunomie/qwen2.5-coder-14b-instruct:q5_k_m Hi
+docker model run eunomie/devstral-small-2505:q4_k_m Hi
 ```
 
 ```text
@@ -46,11 +48,13 @@ Hello! How can I assist you today?
 ```
 
 > [!NOTE]
+> The demo is using [Devstral](https://mistral.ai/news/devstral) model from Mistral AI.
+>
 > Why this model? The goal is to run locally. So we are forced to use small models. The smaller, the more efficient you need to be.
 > So instead of a kind of generic model, I picked one specialized in code, able to understand the context, and also good at following instructions and using tools.
 > Tools are a critical piece when it's time to instrument a model.
-> 
-> I pushed several variants of this model on [Docker Hub](https://hub.docker.com/u/eunomie).
+>
+> I pushed several variants of this model and others on [Docker Hub](https://hub.docker.com/u/eunomie).
 
 ### Dagger
 
@@ -69,7 +73,7 @@ dagger version
 ```
 
 ```text
-dagger v0.18.1 (docker-image://registry.dagger.io/engine:v0.18.1) darwin/arm64
+dagger v0.18.8 (docker-image://registry.dagger.io/engine:v0.18.8) darwin/arm64
 ```
 
 ## How to run
@@ -128,17 +132,20 @@ dagger /workspace $
 This small Dagger project is composed of two modules. The main one you can find in the [`.dagger`](https://github.com/eunomie/local-agent/tree/main/.dagger) directory, will basically do the following:
 
 - get the llm object based on the configuration (available in the [`.env`](https://github.com/eunomie/local-agent/blob/main/.env) file)
-- pass an environment defining the input (an alpine workspace) and the output (a container with the dev environment) to the model
-- ask the model to follow a prompt explaining in deep what we are expecting, basically: analyse the code base, find the tools to install, install them and return the modified container
+- pass an environment defining the input (an alpine workspace) and the output (the modified workspace with the dev environment ready) to the model
+- ask the model to follow a very basic prompt: `do what you need to do`
+    - this prompt is very basic and generic. Especially if you compare it to [this previous version of the prompt](https://github.com/eunomie/local-agent/blob/a71e19a0173a0d87671fd571e6f4c93adae89595/.dagger/qwen_dev_env.md).
+    - this works because of the descriptions on input and output of the environment
+    - those descriptions and objects create the environment of the model, and the model knows what needs to be done
 
-The "alpine workspace" is an other Dagger module you can find in [`alpine-workspace`](https://github.com/eunomie/local-agent/tree/main/alpine-workspace).
-This one is written in Java, but no worries you don't need java on your machine :-)
+The "alpine workspace" is another Dagger module you can find in [`alpine-workspace`](https://github.com/eunomie/local-agent/tree/main/alpine-workspace).
+This one is written in Java, but no worries, you don't need java on your machine :-)
 
 This workspace is simply:
 
 - an alpine container with the source directory mounted
 - a set of commands to install packages, read files, and run commands
 
-This workspace is a very important piece, as by restricting the available commands we help the model to pick the right ones.
+This workspace is a crucial piece, as by restricting the available commands we help the model to pick the right ones.
 
 And, that's it!

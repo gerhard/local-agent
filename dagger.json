@@ -7,7 +7,7 @@
   "dependencies": [
     {
       "name": "alpine-workspace",
-      "source": "alpine-workspace"
+      "source": "./alpine-workspace"
     }
   ],
   "source": ".dagger"

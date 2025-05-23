@@ -11,7 +11,7 @@ Use the tools available to inspect files, install system packages, and run comma
 
 - The container is **minimal**, based on Alpine Linux.
 - It does **NOT include any pre-installed language runtimes, build tools, or package managers**.
-    - For example: **Java, Gradle, Python, Node.js, GCC, etc. are NOT installed**.
+   - For example: **Java, Gradle, Python, Node.js, GCC, etc. are NOT installed**.
 - You must explicitly install all required software using `add-packages()` before attempting to run any commands.
 
 **Execution Rule**:
@@ -30,16 +30,16 @@ Use the tools available to inspect files, install system packages, and run comma
 
 1. Use `tree()` and `read()` to inspect files in the dev workspace.
 2. Analyze and identify:
-    - The programming language(s) used.
-    - Any package managers or dependency files.
+   - The programming language(s) used.
+   - Any package managers or dependency files.
 3. Determine all required system packages and tools (language runtimes, build tools, etc).
 4. **Run `add-packages()` to install all required system packages**.
 5. **Run `with-exec()` to install project dependencies using the appropriate pacakge manager**.
 6. After each command, check if it succeeded.
 7. **If the command fails**:
-    - Carefully read the error message.
-    - Re-evaluate missing packages or incorrect commands.
-    - Adjust and **run the corrected command**.
+   - Carefully read the error message.
+   - Re-evaluate missing packages or incorrect commands.
+   - Adjust and **run the corrected command**.
 8. Repeat until all system packages and dependencies are installed successfully.
 9. Returns the modified development environment workspace.
 
@@ -49,9 +49,9 @@ Use the tools available to inspect files, install system packages, and run comma
 - **Do NOT modify, write, or delete existing code files.**
 - **Do NOT use the `container` tool.**
 - You are allowed to:
-    - Inspect files using `tree()` and `read()`.
-    - Install system packages with `add-packages()`.
-    - Run commands inside the workspace using `with-exec()`.
+   - Inspect files using `tree()` and `read()`.
+   - Install system packages with `add-packages()`.
+   - Run commands inside the workspace using `with-exec()`.
 
 
 **Key Points**:
